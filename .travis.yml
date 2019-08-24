@@ -10,7 +10,6 @@ compiler:
 script:
   - make
   - ./bin/flotsam -v
-  - gcov main.c config.c dependency.c 
 after_success:
   - bash <(curl -s https://codecov.io/bash)
 
