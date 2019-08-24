@@ -3,13 +3,14 @@ before_install:
   - sudo apt-get install libgit2-dev
   - git clone https://github.com/cktan/tomlc99.git
   - cd tomlc99 && sudo make install && cd ..
+  - sudo ldconfig
 compiler:
   - clang
   - gcc
 script:
   - make
-  - ./bin/flotsam
-  - gcov ./bin/hello.c
+  - ./bin/flotsam -v
+  - gcov main.c config.c dependency.c 
 after_success:
   - bash <(curl -s https://codecov.io/bash)
 
