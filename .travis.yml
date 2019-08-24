@@ -1,5 +1,5 @@
 language: c
-install: sudo apt-get install libgit2-dev libtoml-dev
+install: sudo apt-get install libgit2-dev && git clone https://github.com/cktan/tomlc99.git && cd tomlc99 && make
 compiler:
   - clang
   - gcc
