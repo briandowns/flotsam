@@ -1,6 +1,6 @@
 # flotsam
 
-[![Build Status](https://travis-ci.org/<github briandowns>/<repo flotsam>.svg?branch=master)](https://travis-ci.org/<github briandowns>/<repo flotsam>) [![Coverage Status](https://coveralls.io/repos/github/<github briandowns>/<repo flotsam>/badge.svg?branch=master)](https://coveralls.io/github/<github briandowns>/<repo flotsam>?branch=master)
+[![Build Status](https://travis-ci.org/briandowns/flotsam.svg?branch=master)](https://travis-ci.org/briandowns/flotsam)
 
 `flotsam` is a project generator and dependency manager for C. 
 
