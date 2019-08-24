@@ -1,0 +1,13 @@
+language: c
+install: make get-deps
+compiler:
+  - clang
+  - gcc
+sudo: false # only for faster builds
+script:
+  - make
+  - ./bin/flotsam
+  - gcov ./bin/hello.c
+after_success:
+  - bash <(curl -s https://codecov.io/bash)
+
