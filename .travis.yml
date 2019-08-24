@@ -1,4 +1,5 @@
 language: c
+install: apt-get install libgit2-dev libtoml-dev
 compiler:
   - clang
   - gcc
