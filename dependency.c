@@ -31,7 +31,12 @@
 #include <stdlib.h>
 #include <string.h>
 #include <sys/stat.h>
+#ifdef __linux__
+#include <limits.h>
+#else
 #include <sys/syslimits.h>
+#endif
+
 #include <unistd.h>
 
 #include "config.h"
