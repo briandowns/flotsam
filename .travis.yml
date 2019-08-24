@@ -1,9 +1,11 @@
 language: c
-install: sudo apt-get install libgit2-dev && git clone https://github.com/cktan/tomlc99.git && cd tomlc99 && sudo make install && cd ..
+before_install: 
+  - sudo apt-get install libgit2-dev
+  - git clone https://github.com/cktan/tomlc99.git
+  - cd tomlc99 && sudo make install
 compiler:
   - clang
   - gcc
-sudo: false # only for faster builds
 script:
   - make
   - ./bin/flotsam
