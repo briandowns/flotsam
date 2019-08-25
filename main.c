@@ -25,6 +25,8 @@
  * SUCH DAMAGE.
  */
 
+#include <dirent.h>
+#include <ftw.h>
 #include <git2.h>
 #include <stdint.h>
 #include <stdio.h>
@@ -61,10 +63,27 @@
     "  build        builds the project with the given build constraint.\n"                                             \
     "  config       display the current project configuration.\n"                                                      \
     "  deps         displays the project's dependencies.\n"                                                            \
-    "  update       retrieves newly added dependencies.\n"
+    "  update       retrieves newly added dependencies.\n"                                                             \
+    "  clean        cleans the current project based on the build parameter\n"
 
 #define NEW_CMD_ARG_COUNT 4
 #define DEFAULT_VERSION "0.1.0"
+#define LIB_PREFIX "lib"
+
+/**
+ * FLOTSAM_BASE_DIRECTORY
+ */
+#define FLOTSAM_BASE_DIRECTORY                                                                                         \
+    char flotsam_dir[PATH_MAX];                                                                                        \
+    strcat(strcpy(flotsam_dir, getenv("HOME")), "/.flotsam")
+
+/**
+ * initialize_flotsom_dir creates a hidden directory called
+ * .flotsam in the user's home directory.
+ */
+#define INITIALIZE_FLOTSAM_DIR                                                                                         \
+    FLOTSAM_BASE_DIRECTORY;                                                                                            \
+    mkdir(flotsam_dir, 0700)
 
 /**
  * project_type represents all of the different
@@ -129,7 +148,7 @@ render_templates(const enum project_type pt, const char* name)
  * create_project_dirs creates all of the necessary dirs for
  * the given project type.
  */
-void
+static void
 create_project_dirs(const enum project_type pt)
 {
     for (int i = 0; i < (sizeof(project_directories) / sizeof(char*)); i++) {
@@ -141,16 +160,23 @@ create_project_dirs(const enum project_type pt)
 }
 
 /**
- * initialize_flotsom_dir creates a hidden directory called
- * .flotsam in the user's home directory.
+ * strip_lib removes the "lib" prefix from the
+ * given string if it's present.
  */
-void
-initialize_flotsom_dir()
+static void
+strip_chars(char* s, const char* sc)
 {
-    char flotsam_dir[PATH_MAX];
-    strcat(strcpy(flotsam_dir, getenv("HOME")), "/.flotsam");
-    mkdir(flotsam_dir, 0700);
+    while (s = strstr(s, sc)) {
+        memmove(s, s + strlen(sc), 1 + strlen(s + strlen(sc)));
+    }
 }
+
+/**
+ * update_lib_env
+ */
+static void
+update_lib_env()
+{}
 
 int
 main(int argc, char** argv)
@@ -243,14 +269,58 @@ main(int argc, char** argv)
             break;
         }
 
-        initialize_flotsom_dir();
+        INITIALIZE_FLOTSAM_DIR;
 
         config_init();
+
+        struct dependencies* deps = config_get_dependencies();
+        char* ld_lib_path = malloc(PATH_MAX * deps->count);
+        memset(ld_lib_path, 0, PATH_MAX * deps->count);
+        for (int i = 0; i < deps->count; i++) {
+            strcat(ld_lib_path, getenv("HOME"));
+            strcat(ld_lib_path, "/.flotsam/");
+            strcat(ld_lib_path, deps->dependencies[i].name);
+            strcat(ld_lib_path, "@");
+            strcat(ld_lib_path, deps->dependencies[i].vers);
+            strcat(ld_lib_path, ".so");
+            char* link = malloc(strlen(ld_lib_path) + 16);
+            strcat(link, "/usr/local/lib/");
+            strcat(link, ld_lib_path);
+            symlink(ld_lib_path, link);
+        }
 
         if (strcmp(argv[i], "build") == 0) {
             char* build_cmd = config_get_build();
             build_cmd = realloc(build_cmd, 14);
-            strcat(build_cmd, " 2> /dev/null");
+            // strcat(build_cmd, " 2> /dev/null");
+            char* home_dir = getenv("HOME");
+
+            for (int i = 0; i < deps->count; i++) {
+                build_cmd = realloc(build_cmd,
+                                    28 + strlen(deps->dependencies[i].name) + strlen(deps->dependencies[i].vers) +
+                                      strlen(home_dir));
+                strcat(build_cmd, " CFLAGS+='-I");
+                strcat(build_cmd, home_dir);
+                strcat(build_cmd, "/.flotsam/");
+                strcat(build_cmd, deps->dependencies[i].name);
+                strcat(build_cmd, "@");
+                strcat(build_cmd, deps->dependencies[i].vers);
+                strcat(build_cmd, "'");
+                strcat(build_cmd, " LDFLAGS+='-L");
+                strcat(build_cmd, home_dir);
+                strcat(build_cmd, "/.flotsam/");
+                strcat(build_cmd, deps->dependencies[i].name);
+                strcat(build_cmd, "@");
+                strcat(build_cmd, deps->dependencies[i].vers);
+                strcat(build_cmd, "'");
+                strcat(build_cmd, " LDFLAGS+='-l");
+                strip_chars(deps->dependencies[i].name, LIB_PREFIX);
+                strip_chars(deps->dependencies[i].name, ".h");
+                strcat(build_cmd, "'");
+                char* lib_name = strrchr(deps->dependencies[i].name, '/') + 1;
+                strcat(build_cmd, lib_name);
+            }
+
             if (system(build_cmd) != 0) {
                 return 1;
             }
@@ -294,6 +364,15 @@ main(int argc, char** argv)
                 }
             }
 
+            break;
+        }
+        if (strcmp(argv[i], "clean") == 0) {
+            char* test_cmd = config_get_build();
+            test_cmd = realloc(test_cmd, 6);
+            strcat(test_cmd, " clean");
+            if (system(test_cmd) != 0) {
+                return 1;
+            }
             break;
         }
 

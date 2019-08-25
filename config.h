@@ -111,4 +111,11 @@ config_free();
 struct dependencies*
 config_get_dependencies();
 
+/**
+ * config_dependency_count returns the total number of dependencies
+ * in the current project.
+ */
+int
+config_dependency_count();
+
 #endif /* _CONFIG_H */

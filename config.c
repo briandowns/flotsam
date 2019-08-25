@@ -57,7 +57,7 @@ config_init()
     config = malloc(sizeof(struct config));
 
     if (access(FLOTSAM_CONFIG_FILE, F_OK)) {
-        perror("error: flotsam.json not found");
+        perror("error: Flotsam.toml not found");
         return -1;
     }
 
@@ -238,6 +238,12 @@ struct dependencies*
 config_get_dependencies()
 {
     return config->dependencies;
+}
+
+int
+config_dependency_count()
+{
+    return config->dependencies->count;
 }
 
 int

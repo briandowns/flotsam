@@ -16,3 +16,4 @@ testlib
 testbin
 
 *.gcno
+*.gcda

@@ -7,7 +7,7 @@ DEPDIR  := deps
 INCDIR  := include
 BINARY  := flotsam
 LDFLAGS := -ltoml -lgit2
-CFLAGS  := -coverage -Dbin_name=$(BINARY) -Dflotsam_version=$(VERSION) -Dgit_sha=$(shell git rev-parse HEAD)
+CFLAGS  := -Dbin_name=$(BINARY) -Dflotsam_version=$(VERSION) -Dgit_sha=$(shell git rev-parse HEAD)
 
 PREFIX = /usr/local
 
@@ -66,3 +66,4 @@ push:
 .PHONY: clean
 clean:
 	rm -f $(BINDIR)/*
+	rm -f *.gcno

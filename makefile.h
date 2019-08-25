@@ -31,14 +31,14 @@
 #include <stdio.h>
 
 #define MAKEFILE_TEMPLATE                                                                                              \
-    "CC      ?= cc\n"                                                                                                  \
-    "DOCKER  ?= docker\n\n"                                                                                            \
-    "VERSION := %2$s\n"                                                                                                \
-    "BINDIR  := bin\n"                                                                                                 \
-    "DEPDIR  := include\n"                                                                                             \
-    "BINARY  := %1$s\n"                                                                                                \
-    "LDFLAGS :=\n"                                                                                                     \
-    "CFLAGS  := -Dapp_name=$(BINARY) -Dgit_sha=$(shell git rev-parse HEAD)\n\n"                                        \
+    "CC               ?= cc\n"                                                                                         \
+    "DOCKER           ?= docker\n\n"                                                                                   \
+    "VERSION          := %2$s\n"                                                                                       \
+    "BINDIR           := bin\n"                                                                                        \
+    "DEPDIR           := include\n"                                                                                    \
+    "BINARY           := %1$s\n"                                                                                       \
+    "override LDFLAGS +=\n"                                                                                            \
+    "override CFLAGS  += -Dapp_name=$(BINARY) -Dgit_sha=$(shell git rev-parse HEAD)\n\n"                               \
     "$(BINDIR)/$(BINARY): $(BINDIR) clean\n"                                                                           \
     "\t$(CC) main.c $(CFLAGS) -o $(BINDIR)/$(BINARY) $(LDFLAGS)\n\n"                                                   \
     "$(BINDIR):\n"                                                                                                     \

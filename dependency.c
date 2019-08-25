@@ -149,7 +149,7 @@ dependency_update(const char* dep, const char* ver)
 
     char* build_cmd = config_get_build();
     build_cmd = realloc(build_cmd, 14);
-    strcat(build_cmd, " 2> /dev/null");
+    strcat(build_cmd, " > /dev/null 2>&1");
     if (system(build_cmd) != 0) {
         return 1;
     }
