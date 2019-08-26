@@ -38,7 +38,7 @@
     "DEPDIR           := include\n"                                                                                    \
     "BINARY           := %1$s\n"                                                                                       \
     "override LDFLAGS +=\n"                                                                                            \
-    "override CFLAGS  += -Dapp_name=$(BINARY) -Dgit_sha=$(shell git rev-parse HEAD)\n\n"                               \
+    "override CFLAGS  += -static -Dapp_name=$(BINARY) -Dgit_sha=$(shell git rev-parse HEAD)\n\n"                       \
     "$(BINDIR)/$(BINARY): $(BINDIR) clean\n"                                                                           \
     "\t$(CC) main.c $(CFLAGS) -o $(BINDIR)/$(BINARY) $(LDFLAGS)\n\n"                                                   \
     "$(BINDIR):\n"                                                                                                     \

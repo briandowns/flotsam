@@ -95,7 +95,7 @@ enum project_type
     lib
 };
 
-static const char* project_directories[] = { "include", "deps", "tests" };
+static const char* project_directories[] = { "tests" };
 static const char* project_files[] = { ".gitignore", "Makefile", "README.md", "LICENSE", "Flotsam.toml", "Dockerfile" };
 
 /**
@@ -274,25 +274,10 @@ main(int argc, char** argv)
         config_init();
 
         struct dependencies* deps = config_get_dependencies();
-        char* ld_lib_path = malloc(PATH_MAX * deps->count);
-        memset(ld_lib_path, 0, PATH_MAX * deps->count);
-        for (int i = 0; i < deps->count; i++) {
-            strcat(ld_lib_path, getenv("HOME"));
-            strcat(ld_lib_path, "/.flotsam/");
-            strcat(ld_lib_path, deps->dependencies[i].name);
-            strcat(ld_lib_path, "@");
-            strcat(ld_lib_path, deps->dependencies[i].vers);
-            strcat(ld_lib_path, ".so");
-            char* link = malloc(strlen(ld_lib_path) + 16);
-            strcat(link, "/usr/local/lib/");
-            strcat(link, ld_lib_path);
-            symlink(ld_lib_path, link);
-        }
 
         if (strcmp(argv[i], "build") == 0) {
             char* build_cmd = config_get_build();
             build_cmd = realloc(build_cmd, 14);
-            // strcat(build_cmd, " 2> /dev/null");
             char* home_dir = getenv("HOME");
 
             for (int i = 0; i < deps->count; i++) {
