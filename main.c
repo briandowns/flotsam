@@ -318,6 +318,7 @@ main(int argc, char** argv)
             if (system(build_cmd) != 0) {
                 return 1;
             }
+            free(build_cmd);
             break;
         }
         if (strcmp(argv[i], "install") == 0) {
@@ -327,6 +328,7 @@ main(int argc, char** argv)
             if (system(test_cmd) != 0) {
                 return 1;
             }
+            free(test_cmd);
             break;
         }
         if (strcmp(argv[i], "config") == 0) {
@@ -348,6 +350,7 @@ main(int argc, char** argv)
             if (system(test_cmd) != 0) {
                 return 1;
             }
+            free(test_cmd);
             break;
         }
         if (strcmp(argv[i], "update") == 0) {
@@ -367,6 +370,7 @@ main(int argc, char** argv)
             if (system(test_cmd) != 0) {
                 return 1;
             }
+            free(test_cmd);
             break;
         }
 
