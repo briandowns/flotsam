@@ -25,6 +25,7 @@
  * SUCH DAMAGE.
  */
 
+#include <dirent.h>
 #include <git2.h>
 #include <libgen.h>
 #include <stdio.h>
@@ -36,7 +37,6 @@
 #else
 #include <sys/syslimits.h>
 #endif
-
 #include <unistd.h>
 
 #include "config.h"
@@ -51,6 +51,10 @@
 #define REFS_HEAD "refs/heads/"
 
 #define GIT_ERROR_PRINT printf("error %d/%d: %s\n", res, e->klass, e->message)
+
+#define DYLIB_EXT ".dylib"
+#define SO_EXT ".so"
+#define LIB_PATH "/usr/local/lib/"
 
 /**
  * build_dependency_path returns the full path of the
@@ -145,7 +149,6 @@ dependency_update(const char* dep, const char* ver)
         return -1;
     }
     chdir(path);
-    free(path);
 
     char* build_cmd = config_get_build();
     build_cmd = realloc(build_cmd, 24);
@@ -153,6 +156,34 @@ dependency_update(const char* dep, const char* ver)
     if (system(build_cmd) != 0) {
         return 1;
     }
+
+    DIR* dp;
+    struct dirent* dirp;
+
+    if ((dp = opendir(".")) == NULL) {
+        perror("can't open .");
+        return -1;
+    }
+    while ((dirp = readdir(dp)) != NULL) {
+        if (strstr(dirp->d_name, DYLIB_EXT) != NULL || strstr(dirp->d_name, SO_EXT)) {
+            char sl[PATH_MAX];
+            memset(sl, 0, PATH_MAX);
+            strcat(sl, path);
+            strcat(sl, PATH_SEPERATOR);
+            strcat(sl, dirp->d_name);
+
+            char dl[PATH_MAX];
+            memset(dl, 0, PATH_MAX);
+            strcat(dl, LIB_PATH);
+            strcat(dl, dirp->d_name);
+            if (symlink(sl, dl) != 0) {
+                perror(dirp->d_name);
+                return -1;
+            }
+        }
+    }
+    free(path);
+    closedir(dp);
     chdir(getenv("OLDPWD"));
 
     return 0;

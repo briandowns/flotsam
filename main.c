@@ -95,7 +95,12 @@ enum project_type
     lib
 };
 
+// project_directories contains the list of directories that
+// need to be generated at project creation.
 static const char* project_directories[] = { "tests" };
+
+// project_files contains the list of files that need to be
+// generated at project creation.
 static const char* project_files[] = { ".gitignore", "Makefile", "README.md", "LICENSE", "Flotsam.toml", "Dockerfile" };
 
 /**
@@ -107,12 +112,23 @@ render_templates(const enum project_type pt, const char* name)
     char* lib_name = strdup(name);
     FILE* fd;
     for (int i = 0; i < (sizeof(project_files) / sizeof(char*)); i++) {
+        if (strcmp(project_files[i], "Dockerfile") == 0 && pt != bin) {
+            continue;
+        }
         fd = fopen(project_files[i], "w");
         if (strcmp(project_files[i], ".gitignore") == 0) {
             gitignore_render(fd, name);
         }
         if (strcmp(project_files[i], "Makefile") == 0) {
-            makefile_render(fd, name, DEFAULT_VERSION);
+            FILE* fd2;
+            switch (pt) {
+                case bin:
+                    makefile_bin_render(fd, name, DEFAULT_VERSION);
+                    break;
+                case lib:
+                    makefile_lib_render(fd, name, DEFAULT_VERSION);
+                    break;
+            }
         }
         if (strcmp(project_files[i], "README.md") == 0) {
             readme_render(fd, name, DEFAULT_VERSION);
@@ -136,7 +152,7 @@ render_templates(const enum project_type pt, const char* name)
                     break;
             }
         }
-        if (strcmp(project_files[i], "Dockerfile") == 0) {
+        if (strcmp(project_files[i], "Dockerfile") == 0 && pt == bin) {
             dockerfile_render(fd, name);
         }
         fclose(fd);

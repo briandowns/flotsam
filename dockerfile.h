@@ -34,7 +34,7 @@
     "FROM ubuntu:latest\n\n"                                                                                           \
     "RUN apt-get update \n"                                                                                            \
     "COPY bin/%1$s /\n"                                                                                                \
-    "CMD [ \"/%1$s\" ]"
+    "CMD [ \"/%1$s\" ]\n"
 
 /**
  * dockerfile_render

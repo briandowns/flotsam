@@ -6,7 +6,7 @@
 
 ## How It Works
 
-Flotsam is a tool for overall C project development and management.  At the outset, Flotsam can be used to generate a new application or library project.  In the newly created project directory you'll find Once the project has been created development can begin.  
+Flotsam is a tool for overall C project development and management.  At the outset, Flotsam can be used to generate a new application or library project.  
 
 ## Example
 
@@ -49,13 +49,14 @@ In the `Flotsam.toml` "dependencies" section, add the following line:
 "github.com/briandowns/libspinner" = "0.2.2"
 ```
 
-Now run `flotsam update`.  
-And then run `flotsam build`.  At this point, if there were not errors, the application has been built and the resulting binary has been placed in the `bin` directory.
+Now run `flotsam update`.  Flotsam parses the Flotsam.toml file, clones, checks out the given branch or tag, performs a build of the dependency, and makes it available for linking and execution.
+Then run `flotsam build`.  At this point, if there were not errors, the application has been built and the resulting binary has been placed in the `bin` directory.
 
 Run the application:
 
 ```sh
 ./bin/my_new_app
+```
 
 ## Features
 
