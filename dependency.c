@@ -72,7 +72,6 @@ build_dependency_path(const char* dep, const char* ver)
     strcat(path, dep);
     strcat(path, VERSION_SEPERATOR);
     strcat(path, ver);
-
     return path;
 }
 
@@ -93,7 +92,7 @@ clone(const char* dep, const char* ver)
     // check if the directory already exists and if so, return;
     struct stat s = { 0 };
     if (stat(path, &s) == 0 && S_ISDIR(s.st_mode)) {
-        return 0;
+        return dependency_update(dep, ver);
     }
 
     git_repository* repo = NULL;

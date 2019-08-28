@@ -6,7 +6,11 @@
 
 ## How It Works
 
-Flotsam is a tool for overall C project development and management.  At the outset, Flotsam can be used to generate a new application or library project.  
+Flotsam is a tool for overall C project development and management.  At the outset, Flotsam can be used to generate a new application or library project.  It goes a step further by managing dependencies through definition in the Flotsam.toml file.  The Flotsam.toml file lives in the root of the repository and defines the project.  A few fields are required to exist and be populated like; name, repository, build, etc.  The dependency section is required however not needed to be populated.  The dependency will be brought down, built, and installed to the system.
+
+### Requirements
+
+Flotsam has strong opinions.  It puts the built dependencies in `/usr/local/lib`.  Flotsam keeps all dependencies in a cache directory in the users home dir.  One of the primary requirements though of Flotsam is that a Flotsam dependency needs to be a git repository and must create a shared object in the form of a `.so` or a `.dylib` after having a single build command ran.  The build command is defined in the Flotsam.toml file.  All examples use `make`.
 
 ## Example
 

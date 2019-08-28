@@ -182,17 +182,10 @@ create_project_dirs(const enum project_type pt)
 static void
 strip_chars(char* s, const char* sc)
 {
-    while (s = strstr(s, sc)) {
+    while ((s = strstr(s, sc))) {
         memmove(s, s + strlen(sc), 1 + strlen(s + strlen(sc)));
     }
 }
-
-/**
- * update_lib_env
- */
-static void
-update_lib_env()
-{}
 
 int
 main(int argc, char** argv)
