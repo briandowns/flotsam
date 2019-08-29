@@ -85,7 +85,7 @@ Please feel free to open a PR!
 
 ## License
 
-loads source code is available under the BSD 2 clause [License](/LICENSE).
+flotsam source code is available under the BSD 2 clause [License](/LICENSE).
 
 ## Contact
 
