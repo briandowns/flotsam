@@ -103,6 +103,10 @@ static const char* project_directories[] = { "tests" };
 // generated at project creation.
 static const char* project_files[] = { ".gitignore", "Makefile", "README.md", "LICENSE", "Flotsam.toml", "Dockerfile" };
 
+// license_types contains the list of supported licenses that can be selected
+// at project generation time.
+static const char* license_types[] = { "bsd2", "bsd3", "mit", "isc" };
+
 /**
  * render_templates creates and populates files with the necessary contents.
  */
@@ -361,7 +365,6 @@ main(int argc, char** argv)
                     return 1;
                 }
             }
-
             break;
         }
         if (strcmp(argv[i], "clean") == 0) {
