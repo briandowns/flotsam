@@ -55,6 +55,10 @@ config_init()
     }
 
     config = malloc(sizeof(struct config));
+    if (config == NULL) {
+        perror("unable to allocate memory for config");
+        return -1;
+    }
 
     if (access(FLOTSAM_CONFIG_FILE, F_OK)) {
         perror("error: Flotsam.toml not found");
@@ -164,6 +168,10 @@ config_init()
 
     config->author_count = toml_array_nelem(authors_key);
     config->authors = malloc(sizeof(char*) * config->author_count);
+    if (config->authors == NULL) {
+        perror("unable to allocate memory for authors");
+        return -1;
+    }
     for (int i = 0; i < config->author_count; i++) {
         raw = toml_raw_at(authors_key, i);
         if (toml_rtos(raw, &config->authors[i])) {
@@ -181,8 +189,16 @@ config_init()
 
     int dep_count = toml_table_nkval(dependency_table);
     config->dependencies = malloc(sizeof(struct dependency));
+    if (config->dependencies == NULL) {
+        perror("unable to allocate memory for dependencies");
+        return -1;
+    }
     config->dependencies->count = dep_count;
     config->dependencies->dependencies = malloc(sizeof(struct dependency) * config->dependencies->count);
+    if (config->dependencies == NULL) {
+        perror("unable to allocate memory for dependencies");
+        return -1;
+    }
 
     for (int i = 0; i < config->dependencies->count; i++) {
         raw = toml_key_in(dependency_table, i);

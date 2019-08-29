@@ -66,6 +66,9 @@ static char*
 build_dependency_path(const char* dep, const char* ver)
 {
     char* path = malloc(sizeof(char) * PATH_MAX + 1);
+    if (path == NULL) {
+        return NULL;
+    }
     memset(path, 0, PATH_MAX);
     strcat(path, getenv("HOME"));
     strcat(path, DEP_CACHE_PATH);

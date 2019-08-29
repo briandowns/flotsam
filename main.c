@@ -157,6 +157,7 @@ render_templates(const enum project_type pt, const char* name)
         }
         fclose(fd);
     }
+
     return 0;
 }
 
