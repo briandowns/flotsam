@@ -234,7 +234,7 @@ config_free()
         return;
     }
     if (config->dependencies != NULL) {
-        if (config->dependencies != NULL) {
+        if (config->dependencies->dependencies != NULL) {
             for (int i = 0; i < config->dependencies->count; i++) {
                 if (config->dependencies->dependencies[i].name != NULL) {
                     free(config->dependencies->dependencies[i].name);
