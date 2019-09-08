@@ -95,7 +95,7 @@ clone(const char* dep, const char* ver)
     // check if the directory already exists and if so, return;
     struct stat s = { 0 };
     if (stat(path, &s) == 0 && S_ISDIR(s.st_mode)) {
-        return dependency_update(dep, ver);
+        return 0;
     }
 
     git_repository* repo = NULL;
