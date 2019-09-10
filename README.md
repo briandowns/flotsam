@@ -50,7 +50,7 @@ main(int argc, char** argv)
 In the `Flotsam.toml` "dependencies" section, add the following line:
 
 ```
-"github.com/briandowns/libspinner" = "0.2.1"
+"github.com/briandowns/libspinner" = "0.3.1"
 ```
 
 Now run `flotsam update`.  Flotsam parses the Flotsam.toml file, clones, checks out the given branch or tag, performs a build of the dependency, and makes it available for linking and execution.
@@ -65,7 +65,7 @@ Run the application:
 ## Features
 
 * Create new applications and libraries including file and directory scaffolding.
-* Ready to use Dockerfile
+* Ready to use Dockerfile for binary applications.
 
 ## Test
 
@@ -74,6 +74,14 @@ make test
 ```
 
 ## Installation
+
+* MacOS and Linux
+
+```sh
+make install
+```
+
+* FreeBSD 
 
 ```sh
 make install

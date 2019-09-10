@@ -17,7 +17,11 @@ MACOS_MANPAGE_LOC = /usr/share/man
 LINUX_MAPPAGE_LOC = /usr/local/man/man8
 
 $(BINDIR)/$(BINARY): $(BINDIR) clean
+ifeq ($(UNAME_S),FreeBSD)
+	$(CC) $(CFLAGS) main.c config.c dependency.c -o $(BINDIR)/$(BINARY) $(LDFLAGS) -I/usr/local/include -L/usr/local/lib
+else
 	$(CC) $(CFLAGS) main.c config.c dependency.c -o $(BINDIR)/$(BINARY) $(LDFLAGS)
+endif
 	
 $(BINDIR):
 	mkdir -p $(BINDIR)
