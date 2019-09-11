@@ -50,7 +50,7 @@ main(int argc, char** argv)
 In the `Flotsam.toml` "dependencies" section, add the following line:
 
 ```
-"github.com/briandowns/libspinner" = "0.2.2"
+"github.com/briandowns/libspinner" = "0.2.1"
 ```
 
 Now run `flotsam update`.  Flotsam parses the Flotsam.toml file, clones, checks out the given branch or tag, performs a build of the dependency, and makes it available for linking and execution.

@@ -195,8 +195,7 @@ strip_chars(char* s, const char* sc)
 int
 main(int argc, char** argv)
 {
-    int c;
-    if (argc < 1) {
+    if (argc < 2) {
         printf(USAGE, STR(bin_name));
         return 1;
     }
