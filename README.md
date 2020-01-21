@@ -6,7 +6,9 @@
 
 ## How It Works
 
-Flotsam is a tool for overall C project development and management.  At the outset, Flotsam can be used to generate a new application or library project.  It goes a step further by managing dependencies through definition in the Flotsam.toml file.  The Flotsam.toml file lives in the root of the repository and defines the project.  A few fields are required to exist and be populated like; name, repository, build, etc.  The dependency section is required however not needed to be populated.  The dependency will be brought down, built, and installed to the system.
+Flotsam is a tool for overall C project development and management.  At the outset, Flotsam can be used to generate a new application or library project.  It goes a step further by managing dependencies through definition in the `Flotsam.toml` file.  The `Flotsam.toml` file lives in the root of the repository and defines the project.  
+
+A few fields are required to exist and be populated like; name, repository, build, etc.  The dependency section is required however not needed to be populated.  The dependency will be brought down, built, and installed to the system.
 
 ### Requirements
 
@@ -22,7 +24,7 @@ Create a new application.  Flotsam will create all of the necessary files with t
 flotsam new --bin my_new_app
 ```
 
-Add the below code to the `main.c`:
+Add the below code to `main.c`:
 
 ```c
 #include <stdio.h>
@@ -32,9 +34,9 @@ Add the below code to the `main.c`:
 #include "spinner.h"
 
 int
-main(int argc, char** argv)
+main(int argc, char **argv)
 {
-    spinner_t* s = spinner_new(19);
+    spinner_t *s = spinner_new(19);
     s->delay = 100000;
     s->prefix = "Running ";
     s->suffix = " I'm a suffix";
@@ -84,7 +86,7 @@ make install
 * FreeBSD 
 
 ```sh
-make install
+gmake install
 ```
 
 ## Contributing
