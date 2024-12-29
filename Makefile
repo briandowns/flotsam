@@ -8,7 +8,7 @@ BINDIR  = bin
 DEPDIR  = deps
 INCDIR  = include
 BINARY  = flotsam
-LDFLAGS = 
+LDFLAGS = -lgit2
 CFLAGS  = -std=c99 -Wall -Wextra -fpic -Dbin_name=$(BINARY) -Dflotsam_version=$(VERSION) -Dgit_sha=$(shell git rev-parse HEAD)
 ifeq ($(UNAME_S),Darwin)
 	LDFLAGS += $(shell pkg-config --libs libgit2 jansson)

@@ -27,19 +27,20 @@
 
 #include <dirent.h>
 #include <ftw.h>
-#include <git2.h>
+#ifdef __linux__
+#include <linux/limits.h>
+#else
+#include <sys/syslimits.h>
+#endif
 #include <stdint.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
 #include <sys/stat.h>
-#ifdef __linux__
-#include <limits.h>
-#else
-#include <sys/syslimits.h>
-#endif
 #include <sys/types.h>
 #include <unistd.h>
+
+#include <git2.h>
 
 #include "config.h"
 #include "dependency.h"
@@ -120,16 +121,17 @@ render_templates(const enum project_type pt, const char *name)
 {
     char *lib_name = strdup(name);
     FILE *fd;
-    for (int i = 0; i < (sizeof(project_files) / sizeof(char*)); i++) {
+    for (long unsigned int i = 0; i < (sizeof(project_files) / sizeof(char*)); i++) {
         if (strcmp(project_files[i], "Dockerfile") == 0 && pt != bin) {
             continue;
         }
+
         fd = fopen(project_files[i], "w");
         if (strcmp(project_files[i], ".gitignore") == 0) {
             gitignore_render(fd, name);
         }
+
         if (strcmp(project_files[i], "Makefile") == 0) {
-            FILE* fd2;
             switch (pt) {
                 case bin:
                     makefile_bin_render(fd, name, DEFAULT_VERSION);
@@ -139,9 +141,11 @@ render_templates(const enum project_type pt, const char *name)
                     break;
             }
         }
+
         if (strcmp(project_files[i], "README.md") == 0) {
             readme_render(fd, name, DEFAULT_VERSION);
         }
+
         if (strcmp(project_files[i], "Flotsam.toml") == 0) {
             FILE *fd2;
             switch (pt) {
@@ -163,11 +167,13 @@ render_templates(const enum project_type pt, const char *name)
                     break;
             }
         }
+
         if (strcmp(project_files[i], "Dockerfile") == 0 && pt == bin) {
             if (with_dockerfile) {
                 dockerfile_render(fd, name);
             }
         }
+
         fclose(fd);
     }
 
@@ -181,7 +187,7 @@ render_templates(const enum project_type pt, const char *name)
 static void
 create_project_dirs(const enum project_type pt)
 {
-    for (int i = 0; i < (sizeof(project_directories) / sizeof(char*)); i++) {
+    for (long unsigned int i = 0; i < (sizeof(project_directories) / sizeof(char*)); i++) {
         mkdir(project_directories[i], 0700);
     }
     if (pt == bin) {
@@ -385,7 +391,7 @@ main(int argc, char **argv)
         }
         if (strcmp(argv[i], "clean") == 0) {
             char* test_cmd = config_get_build();
-            test_cmd = realloc(test_cmd, 6);
+            test_cmd = realloc(test_cmd, 7);
             strcat(test_cmd, " clean");
             if (system(test_cmd) != 0) {
                 return 1;

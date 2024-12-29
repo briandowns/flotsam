@@ -33,7 +33,7 @@
 #include <string.h>
 #include <sys/stat.h>
 #ifdef __linux__
-#include <limits.h>
+#include <linux/limits.h>
 #else
 #include <sys/syslimits.h>
 #endif
@@ -65,16 +65,17 @@
 static char*
 build_dependency_path(const char* dep, const char* ver)
 {
-    char* path = malloc(sizeof(char) * PATH_MAX + 1);
+    char* path = calloc(PATH_MAX + 1, sizeof(char));
     if (path == NULL) {
         return NULL;
     }
-    memset(path, 0, PATH_MAX);
-    strcat(path, getenv("HOME"));
+
+    strcpy(path, getenv("HOME"));
     strcat(path, DEP_CACHE_PATH);
     strcat(path, dep);
     strcat(path, VERSION_SEPERATOR);
     strcat(path, ver);
+
     return path;
 }
 
@@ -87,7 +88,7 @@ clone(const char* dep, const char* ver)
 {
     char url[MAX_URL_LEN];
     memset(&url, 0, MAX_URL_LEN);
-    strcat(url, ULR_PREFIX_HTTPS);
+    strcpy(url, ULR_PREFIX_HTTPS);
     strcat(url, dep);
 
     char* path = build_dependency_path(dep, ver);
@@ -166,24 +167,27 @@ dependency_update(const char* dep, const char* ver)
         perror("can't open .");
         return -1;
     }
+
     while ((dirp = readdir(dp)) != NULL) {
         if (strstr(dirp->d_name, DYLIB_EXT) != NULL || strstr(dirp->d_name, SO_EXT)) {
             char sl[PATH_MAX];
             memset(sl, 0, PATH_MAX);
-            strcat(sl, path);
+            strcpy(sl, path);
             strcat(sl, PATH_SEPERATOR);
             strcat(sl, dirp->d_name);
 
             char dl[PATH_MAX];
             memset(dl, 0, PATH_MAX);
-            strcat(dl, LIB_PATH);
+            strcpy(dl, LIB_PATH);
             strcat(dl, dirp->d_name);
+
             if (symlink(sl, dl) != 0) {
                 perror(dirp->d_name);
                 return -1;
             }
         }
     }
+
     free(path);
     closedir(dp);
     chdir(getenv("OLDPWD"));
