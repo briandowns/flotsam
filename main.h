@@ -1,7 +1,7 @@
 /*-
  * SPDX-License-Identifier: BSD-2-Clause
  *
- * Copyright (c) 2019 Brian J. Downs, John K. Moore
+ * Copyright (c) 2025 Brian J. Downs, John K. Moore
  *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions
@@ -30,19 +30,19 @@
 
 #include <stdio.h>
 
-#define MAIN_TEMPLATE                                                                                                  \
-    "#include <stdlib.h>\n\n"                                                                                          \
-    "// main file for %1$s. Version: %2$s\n\n"                                                                         \
-    "#define STR1(x) #x\n"                                                                                             \
-    "#define STR(x) STR1(x)\n\n"                                                                                       \
-    "int\n"                                                                                                            \
-    "main(int argc, char **argv)\n"                                                                                    \
-    "{\n"                                                                                                              \
-    "    return 0;\n"                                                                                                  \
+#define MAIN_TEMPLATE                          \
+    "#include <stdlib.h>\n\n"                  \
+    "// main file for %1$s. Version: %2$s\n\n" \
+    "#define STR1(x) #x\n"                     \
+    "#define STR(x) STR1(x)\n\n"               \
+    "int\n"                                    \
+    "main(int argc, char **argv)\n"            \
+    "{\n"                                      \
+    "    return 0;\n"                          \
     "}\n\n"
 
 void
-main_render(FILE* fd, const char* name, const char* version)
+main_render(FILE *fd, const char *name, const char *version)
 {
     fprintf(fd, MAIN_TEMPLATE, name, version);
 }

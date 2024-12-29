@@ -1,7 +1,7 @@
 /*-
  * SPDX-License-Identifier: BSD-2-Clause
  *
- * Copyright (c) 2019 Brian J. Downs, John K. Moore
+ * Copyright (c) 2025 Brian J. Downs, John K. Moore
  *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions
@@ -42,19 +42,19 @@
 #include "config.h"
 #include "dependency.h"
 
-#define DEP_CACHE_PATH "/.flotsam/"
-#define PATH_SEPERATOR "/"
-#define ULR_PREFIX_HTTPS "https://"
-#define ULR_PREFIX_GIT "git@"
+#define DEP_CACHE_PATH    "/.flotsam/"
+#define PATH_SEPERATOR    "/"
+#define ULR_PREFIX_HTTPS  "https://"
+#define ULR_PREFIX_GIT    "git@"
 #define VERSION_SEPERATOR "@"
-#define MAX_URL_LEN 2048
-#define REFS_HEAD "refs/heads/"
+#define MAX_URL_LEN       2048
+#define REFS_HEAD         "refs/heads/"
 
 #define GIT_ERROR_PRINT printf("error %d/%d: %s\n", res, e->klass, e->message)
 
 #define DYLIB_EXT ".dylib"
-#define SO_EXT ".so"
-#define LIB_PATH "/usr/local/lib/"
+#define SO_EXT    ".so"
+#define LIB_PATH  "/usr/local/lib/"
 
 /**
  * build_dependency_path returns the full path of the

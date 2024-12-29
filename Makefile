@@ -1,17 +1,23 @@
 CC      ?= cc
 DOCKER  ?= docker
 
-VERSION := 0.1.0
-BINDIR  := bin
-DEPDIR  := deps
-INCDIR  := include
-BINARY  := flotsam
-LDFLAGS := -ltoml -lgit2
-CFLAGS  := -Dbin_name=$(BINARY) -Dflotsam_version=$(VERSION) -Dgit_sha=$(shell git rev-parse HEAD)
+UNAME_S = $(shell uname -s)
+
+VERSION = 0.1.0
+BINDIR  = bin
+DEPDIR  = deps
+INCDIR  = include
+BINARY  = flotsam
+LDFLAGS = 
+CFLAGS  = -std=c99 -Wall -Wextra -fpic -Dbin_name=$(BINARY) -Dflotsam_version=$(VERSION) -Dgit_sha=$(shell git rev-parse HEAD)
+ifeq ($(UNAME_S),Darwin)
+	LDFLAGS += $(shell pkg-config --libs libgit2 jansson)
+	CFLAGS += $(shell pkg-config --cflags libgit2 jansson)
+else
+	LDFLAGS += -ljansson
+endif
 
 PREFIX = /usr/local
-
-UNAME_S = $(shell uname -s)
 
 MACOS_MANPAGE_LOC = /usr/share/man
 LINUX_MAPPAGE_LOC = /usr/local/man/man8
@@ -54,6 +60,12 @@ uninstall:
 
 .PHONY: deps
 deps: $(DEPDIR)
+
+.PHONY: valgrind
+valgrind:
+	$(CC) -g -o $@ bluesky.c example.c $(CFLAGS) $(LDFLAGS)
+	valgrind --leak-check=full ./valgrind 2>&1 | awk -F':' '/definitely lost:/ {print $2}'
+	rm -f valgrind
 
 .PHONY: image
 image:

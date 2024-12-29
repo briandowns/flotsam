@@ -1,7 +1,7 @@
 /*-
  * SPDX-License-Identifier: BSD-2-Clause
  *
- * Copyright (c) 2019 Brian J. Downs, John K. Moore
+ * Copyright (c) 2025 Brian J. Downs, John K. Moore
  *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions
@@ -25,27 +25,27 @@
  * SUCH DAMAGE.
  */
 
-#include <stdlib.h>
+#include <stdlib.h> 
 #include <string.h>
 #include <sys/stat.h>
 #include <sys/types.h>
-#include <toml.h>
 #include <unistd.h>
+
+#include <jansson.h>
 
 #include "config.h"
 
-#define FLOTSAM_CONFIG_FILE "Flotsam.toml"
+#define FLOTSAM_CONFIG_FILE "Flotsam.json"
 
-static toml_table_t* conf;
-static toml_table_t* package_table;
-static toml_table_t* dependency_table;
-static toml_array_t* authors_key;
+static json_t *conf;
+static json_t *package_table;
+static json_t *dependency_table;
+static json_t *authors_key;
 
 const char* raw;
 
 static char err[200];
-
-static struct config* config;
+static struct config *config;
 
 int
 config_init()

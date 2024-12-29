@@ -1,7 +1,7 @@
 /*-
  * SPDX-License-Identifier: BSD-2-Clause
  *
- * Copyright (c) 2019 Brian J. Downs, John K. Moore
+ * Copyright (c) 2025 Brian J. Downs, John K. Moore
  *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions
@@ -30,29 +30,30 @@
 
 #include <stdio.h>
 
-#define FLOTSAM_TEMPLATE                                                                                               \
-    "[package]\n"                                                                                                      \
-    "# required\n"                                                                                                     \
-    "name = \"%1$s\"\n\n"                                                                                              \
-    "# required\n"                                                                                                     \
-    "type = \"%4$s\"\n\n"                                                                                              \
-    "# required\n"                                                                                                     \
-    "build = \"make\"\n\n"                                                                                             \
-    "# required\n"                                                                                                     \
-    "repository = \"\"\n\n"                                                                                            \
-    "# required\n"                                                                                                     \
-    "version = \"%2$s\"\n\n"                                                                                           \
-    "# optional\n"                                                                                                     \
-    "description = \"\"\n\n"                                                                                           \
-    "# optional\n"                                                                                                     \
-    "homepage = \"\"\n\n"                                                                                              \
-    "# optional\n"                                                                                                     \
-    "authors = [\"%3$s\"]\n\n"                                                                                         \
-    "# required even if nothing listed\n"                                                                              \
+#define FLOTSAM_TEMPLATE                  \
+    "[package]\n"                         \
+    "# required\n"                        \
+    "name = \"%1$s\"\n\n"                 \
+    "# required\n"                        \
+    "type = \"%4$s\"\n\n"                 \
+    "# required\n"                        \
+    "build = \"make\"\n\n"                \
+    "# required\n"                        \
+    "repository = \"\"\n\n"               \
+    "# required\n"                        \
+    "version = \"%2$s\"\n\n"              \
+    "# optional\n"                        \
+    "description = \"\"\n\n"              \
+    "# optional\n"                        \
+    "homepage = \"\"\n\n"                 \
+    "# optional\n"                        \
+    "authors = [\"%3$s\"]\n\n"            \
+    "# required even if nothing listed\n" \
     "[dependencies]\n\n"
 
 void
-flotsam_render(FILE* fd, const char* name, const char* version, const char* user, const char* type)
+flotsam_render(FILE *fd, const char *name, const char *version,
+               const char *user, const char *type)
 {
     fprintf(fd, FLOTSAM_TEMPLATE, name, version, user, type);
 }

@@ -1,7 +1,7 @@
 /*-
  * SPDX-License-Identifier: BSD-2-Clause
  *
- * Copyright (c) 2019 Brian J. Downs
+ * Copyright (c) 2025 Brian J. Downs
  *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions
@@ -53,68 +53,73 @@
 #define STR1(x) #x
 #define STR(x) STR1(x)
 
-#define USAGE                                                                                                          \
-    "usage: %s [-vh]\n"                                                                                                \
-    "  -v          version\n"                                                                                          \
-    "  -h          help\n\n"                                                                                           \
-    "commands:\n"                                                                                                      \
-    "  new          --bin <name> create new binary application\n"                                                      \
-    "               --lib <name> create new library\n"                                                                 \
-    "  build        builds the project with the given build constraint.\n"                                             \
-    "  config       display the current project configuration.\n"                                                      \
-    "  deps         displays the project's dependencies.\n"                                                            \
-    "  update       retrieves newly added dependencies.\n"                                                             \
+#define USAGE                                                                 \
+    "usage: %s [-vh]\n"                                                       \
+    "  -v          version\n"                                                 \
+    "  -h          help\n\n"                                                  \
+    "commands:\n"                                                             \
+    "  new          --bin <name> create new binary application\n"             \
+    "               --lib <name> create new library\n"                        \
+    "  build        builds the project with the given build constraint.\n"    \
+    "  config       display the current project configuration.\n"             \
+    "  deps         displays the project's dependencies.\n"                   \
+    "  update       retrieves newly added dependencies.\n"                    \
     "  clean        cleans the current project based on the build parameter\n"
 
-#define NEW_CMD_ARG_COUNT 4
-#define DEFAULT_VERSION "0.1.0"
-#define LIB_PREFIX "lib"
+#define MAX_NEW_CMD_ARG_COUNT 5
+#define DEFAULT_VERSION       "0.1.0"
+#define LIB_PREFIX            "lib"
 
 /**
- * FLOTSAM_BASE_DIRECTORY
+ * FLOTSAM_BASE_DIRECTORY initializes a the flotsam_dir variable to contain the
+ * default location of the flotsam directory for that use on that system.
  */
-#define FLOTSAM_BASE_DIRECTORY                                                                                         \
-    char flotsam_dir[PATH_MAX];                                                                                        \
+#define FLOTSAM_BASE_DIRECTORY                               \
+    char flotsam_dir[PATH_MAX];                              \
+    flotsam_dir[0] = '\0';                                   \
     strcat(strcpy(flotsam_dir, getenv("HOME")), "/.flotsam")
 
 /**
  * initialize_flotsom_dir creates a hidden directory called
  * .flotsam in the user's home directory.
  */
-#define INITIALIZE_FLOTSAM_DIR                                                                                         \
-    FLOTSAM_BASE_DIRECTORY;                                                                                            \
+#define INITIALIZE_FLOTSAM_DIR \
+    FLOTSAM_BASE_DIRECTORY;    \
     mkdir(flotsam_dir, 0700)
 
 /**
  * project_type represents all of the different
  * types of projects that can be generated.
  */
-enum project_type
-{
+enum project_type {
     bin,
     lib
 };
 
 // project_directories contains the list of directories that
 // need to be generated at project creation.
-static const char* project_directories[] = { "tests" };
+static const char *project_directories[] = { "tests" };
 
 // project_files contains the list of files that need to be
 // generated at project creation.
-static const char* project_files[] = { ".gitignore", "Makefile", "README.md", "LICENSE", "Flotsam.toml", "Dockerfile" };
+static const char *project_files[] = {".gitignore", "Makefile", "README.md",
+                                      "LICENSE", "Flotsam.toml", "Dockerfile"};
 
 // license_types contains the list of supported licenses that can be selected
 // at project generation time.
-static const char* license_types[] = { "bsd2", "bsd3", "mit", "isc" };
+static const char *license_types[] = {"bsd2", "bsd3", "mit", "isc"};
+
+// with_dockerfile stores whether or not a Dockerfile should be rendered.
+static int with_dockerfile = 0;
 
 /**
  * render_templates creates and populates files with the necessary contents.
  */
 int
-render_templates(const enum project_type pt, const char* name)
+render_templates(const enum project_type pt, const char *name)
 {
-    char* lib_name = strdup(name);
-    FILE* fd;
+    char *lib_name = strdup(name);
+    FILE *fd;
     for (int i = 0; i < (sizeof(project_files) / sizeof(char*)); i++) {
         if (strcmp(project_files[i], "Dockerfile") == 0 && pt != bin) {
             continue;
@@ -138,16 +143,18 @@ render_templates(const enum project_type pt, const char* name)
             readme_render(fd, name, DEFAULT_VERSION);
         }
         if (strcmp(project_files[i], "Flotsam.toml") == 0) {
-            FILE* fd2;
+            FILE *fd2;
             switch (pt) {
                 case bin:
-                    flotsam_render(fd, name, DEFAULT_VERSION, getenv("USER"), "bin");
+                    flotsam_render(fd, name, DEFAULT_VERSION,
+                                   getenv("USER"), "bin");
                     fd2 = fopen("main.c", "w");
                     main_render(fd2, name, DEFAULT_VERSION);
                     fclose(fd2);
                     break;
                 case lib:
-                    flotsam_render(fd, name, DEFAULT_VERSION, getenv("USER"), "lib");
+                    flotsam_render(fd, name, DEFAULT_VERSION,
+                                   getenv("USER"), "lib");
                     lib_name = realloc(lib_name, 3);
                     strcat(lib_name, ".h");
                     fd2 = fopen(lib_name, "w");
@@ -157,7 +164,9 @@ render_templates(const enum project_type pt, const char* name)
             }
         }
         if (strcmp(project_files[i], "Dockerfile") == 0 && pt == bin) {
-            dockerfile_render(fd, name);
+            if (with_dockerfile) {
+                dockerfile_render(fd, name);
+            }
         }
         fclose(fd);
     }
@@ -185,7 +194,7 @@ create_project_dirs(const enum project_type pt)
  * given string if it's present.
  */
 static void
-strip_chars(char* s, const char* sc)
+strip_chars(char *s, const char *sc)
 {
     while ((s = strstr(s, sc))) {
         memmove(s, s + strlen(sc), 1 + strlen(s + strlen(sc)));
@@ -193,7 +202,7 @@ strip_chars(char* s, const char* sc)
 }
 
 int
-main(int argc, char** argv)
+main(int argc, char **argv)
 {
     if (argc < 2) {
         printf(USAGE, STR(bin_name));
@@ -204,7 +213,8 @@ main(int argc, char** argv)
 
     for (int i = 1; i < argc; i++) {
         if (strcmp(argv[i], "-v") == 0) {
-            printf("version: %s - git: %s\n", STR(flotsam_version), STR(git_sha));
+            printf("version: %s - git: %s\n", STR(flotsam_version),
+                   STR(git_sha));
             break;
         }
         if (strcmp(argv[i], "-h") == 0) {
@@ -212,8 +222,8 @@ main(int argc, char** argv)
             break;
         }
         if (strcmp(argv[i], "new") == 0) {
-            if (argc != NEW_CMD_ARG_COUNT) {
-                fprintf(stderr, "new command requires 2 args. [--bin|--lib] project_name\n");
+            if ((argc > MAX_NEW_CMD_ARG_COUNT) || (argc < MAX_NEW_CMD_ARG_COUNT - 1)) {
+                fprintf(stderr, "new requires at least 2 args; --bin or --lib and project_name\n");
                 return 1;
             }
 
@@ -221,6 +231,13 @@ main(int argc, char** argv)
             char* project_name = strdup(argv[i + 2]);
 
             if (strcmp(argv[i + 1], "--bin") == 0) {
+                if (argc == 5) {
+                    if ((strcmp(argv[3], "--with-docker") == 0) || (strcmp(argv[4], "--with-docker") == 0)) {
+                        printf("here...\n");
+                        with_dockerfile = 1;
+                    }
+                }
+
                 strcpy(project_type, "bin");
 
                 if (mkdir(argv[i + 2], 0700) == -1) {

@@ -1,7 +1,7 @@
 /*-
  * SPDX-License-Identifier: BSD-2-Clause
  *
- * Copyright (c) 2019 Brian J. Downs, John K. Moore
+ * Copyright (c) 2025 Brian J. Downs, John K. Moore
  *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions
@@ -30,17 +30,17 @@
 
 #include <stdio.h>
 
-#define DOCKERFILE_TEMPLATE                                                                                            \
-    "FROM ubuntu:latest\n\n"                                                                                           \
-    "RUN apt-get update \n"                                                                                            \
-    "COPY bin/%1$s /\n"                                                                                                \
+#define DOCKERFILE_TEMPLATE  \
+    "FROM ubuntu:latest\n\n" \
+    "RUN apt-get update \n"  \
+    "COPY bin/%1$s /\n"      \
     "CMD [ \"/%1$s\" ]\n"
 
 /**
  * dockerfile_render
  */
 void
-dockerfile_render(FILE* fd, const char* name)
+dockerfile_render(FILE *fd, const char *name)
 {
     fprintf(fd, DOCKERFILE_TEMPLATE, name);
 }

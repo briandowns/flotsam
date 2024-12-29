@@ -1,7 +1,7 @@
 /*-
  * SPDX-License-Identifier: BSD-2-Clause
  *
- * Copyright (c) 2019 Brian J. Downs, John K. Moore
+ * Copyright (c) 2025 Brian J. Downs, John K. Moore
  *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions
@@ -30,20 +30,20 @@
 
 #include <stdio.h>
 
-#define GITIGNORE_TEMPLATE                                                                                             \
-    "unity/libunity.a\n"                                                                                               \
-    "tests/unity/libunity.a\n"                                                                                         \
-    "tests/log.c\n\n"                                                                                                  \
-    "*.o\n"                                                                                                            \
-    "*.so\n\n"                                                                                                         \
-    "*.dylib\n\n"                                                                                                      \
-    ".vscode\n\n"                                                                                                      \
-    "bin/*\n\n"                                                                                                        \
-    "tmp/\n"                                                                                                           \
+#define GITIGNORE_TEMPLATE     \
+    "unity/libunity.a\n"       \
+    "tests/unity/libunity.a\n" \
+    "tests/log.c\n\n"          \
+    "*.o\n"                    \
+    "*.so\n\n"                 \
+    "*.dylib\n\n"              \
+    ".vscode\n\n"              \
+    "bin/*\n\n"                \
+    "tmp/\n"                   \
     "%1$s\n\n"
 
 void
-gitignore_render(FILE* fd, const char* name)
+gitignore_render(FILE *fd, const char *name)
 {
     fprintf(fd, GITIGNORE_TEMPLATE, name);
 }

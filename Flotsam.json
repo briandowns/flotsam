@@ -1,0 +1,18 @@
+{
+    "package": {
+        "name": "flotsam",
+        "type": "bin",
+        "build": "make",
+        "repository": "github.com/briandowns/flotsam",
+        "version": "0.1.0",
+        "description": "Flotsam is a project generator and dependency manager for C.",
+        "homepage": "",
+        "Authors": ["Brian J. Downs"]
+    },
+    "dependencies": [
+        {
+            "name": "github.com/briandowns/libspinner.git",
+            "version": "1.1.0"
+        }
+    ]
+}

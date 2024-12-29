@@ -1,7 +1,7 @@
 /*-
  * SPDX-License-Identifier: BSD-2-Clause
  *
- * Copyright (c) 2019 Brian J. Downs, John K. Moore
+ * Copyright (c) 2025 Brian J. Downs, John K. Moore
  *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions
@@ -28,17 +28,6 @@
 #ifndef _CONFIG_H
 #define _CONFIG_H
 
-#include <toml.h>
-
-static toml_table_t* conf;
-static toml_table_t* package_table;
-static toml_table_t* dependency_table;
-static toml_array_t* authors_key;
-
-const char* raw;
-
-static char errbuf[200];
-
 /**
  * dependency represents a single dependency
  * containing a name and a version.
@@ -56,7 +45,7 @@ struct dependency
 struct dependencies
 {
     int count;
-    struct dependency* dependencies;
+    struct dependency *dependencies;
 };
 
 /**
@@ -64,16 +53,16 @@ struct dependencies
  */
 struct config
 {
-    char* name;
-    char* pkg_ver;
-    char* description;
-    char** authors;
+    char *name;
+    char *pkg_ver;
+    char *description;
+    char **authors;
     int author_count;
-    char* type;
-    char* build;
-    char* repository;
-    char* homepage;
-    struct dependencies* dependencies;
+    char *type;
+    char *build;
+    char *repository;
+    char *homepage;
+    struct dependencies *dependencies;
 };
 
 /**
@@ -86,15 +75,15 @@ char*
 config_get_build();
 
 /**
- * config_print prints the current configuration from
- * a valid Flotsam.toml file.
+ * config_print prints the current configuration from a valid Flotsam.toml
+ * file.
  */
 int
 config_print();
 
 /**
- * config_print_dependencies prints the current set of
- * dependencies from a valid Flotsam.toml file.
+ * config_print_dependencies prints the current set of dependencies from a
+ * valid Flotsam.toml file.
  */
 int
 config_print_dependencies();
@@ -112,8 +101,8 @@ struct dependencies*
 config_get_dependencies();
 
 /**
- * config_dependency_count returns the total number of dependencies
- * in the current project.
+ * config_dependency_count returns the total number of dependencies in the
+ * current project.
  */
 int
 config_dependency_count();

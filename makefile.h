@@ -1,7 +1,7 @@
 /*-
  * SPDX-License-Identifier: BSD-2-Clause
  *
- * Copyright (c) 2019 Brian J. Downs, John K. Moore
+ * Copyright (c) 2025 Brian J. Downs, John K. Moore
  *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions
@@ -30,68 +30,68 @@
 
 #include <stdio.h>
 
-#define MAKEFILE_BIN_TEMPLATE                                                                                          \
-    "CC               ?= cc\n"                                                                                         \
-    "DOCKER           ?= docker\n\n"                                                                                   \
-    "VERSION          := %2$s\n"                                                                                       \
-    "BINDIR           := bin\n"                                                                                        \
-    "BINARY           := %1$s\n"                                                                                       \
-    "override LDFLAGS +=\n"                                                                                            \
-    "override CFLAGS  += -Dapp_name=$(BINARY) -Dgit_sha=$(shell git rev-parse HEAD) -O3\n\n"                           \
-    "$(BINDIR)/$(BINARY): $(BINDIR) clean\n"                                                                           \
-    "\t$(CC) main.c $(CFLAGS) -o $(BINDIR)/$(BINARY) $(LDFLAGS)\n\n"                                                   \
-    "$(BINDIR):\n"                                                                                                     \
-    "\tmkdir -p $(BINDIR)\n\n"                                                                                         \
-    "$(DEPDIR):\n"                                                                                                     \
-    "\tmkdir -p $(DEPDIR)\n\n"                                                                                         \
-    ".PHONY: image\n"                                                                                                  \
-    "image:\n"                                                                                                         \
-    "\t$(DOCKER) build -t $(BINARY):latest .\n\n"                                                                      \
-    ".PHONY: push\n"                                                                                                   \
-    "push:\n\n"                                                                                                        \
-    ".PHONY: deps\n"                                                                                                   \
-    "deps: $(DEPDIR)\n\n"                                                                                              \
-    ".PHONY: clean\n"                                                                                                  \
-    "clean:\n"                                                                                                         \
+#define MAKEFILE_BIN_TEMPLATE                                                                \
+    "CC               ?= cc\n"                                                               \
+    "DOCKER           ?= docker\n\n"                                                         \
+    "VERSION          := %2$s\n"                                                             \
+    "BINDIR           := bin\n"                                                              \
+    "BINARY           := %1$s\n"                                                             \
+    "override LDFLAGS +=\n"                                                                  \
+    "override CFLAGS  += -Dapp_name=$(BINARY) -Dgit_sha=$(shell git rev-parse HEAD) -O3\n\n" \
+    "$(BINDIR)/$(BINARY): $(BINDIR) clean\n"                                                 \
+    "\t$(CC) main.c $(CFLAGS) -o $(BINDIR)/$(BINARY) $(LDFLAGS)\n\n"                         \
+    "$(BINDIR):\n"                                                                           \
+    "\tmkdir -p $(BINDIR)\n\n"                                                               \
+    "$(DEPDIR):\n"                                                                           \
+    "\tmkdir -p $(DEPDIR)\n\n"                                                               \
+    ".PHONY: image\n"                                                                        \
+    "image:\n"                                                                               \
+    "\t$(DOCKER) build -t $(BINARY):latest .\n\n"                                            \
+    ".PHONY: push\n"                                                                         \
+    "push:\n\n"                                                                              \
+    ".PHONY: deps\n"                                                                         \
+    "deps: $(DEPDIR)\n\n"                                                                    \
+    ".PHONY: clean\n"                                                                        \
+    "clean:\n"                                                                               \
     "\trm -f $(BINDIR)/*\n\n"
 
-#define MAKEFILE_LIB_TEMPLATE                                                                                          \
-    "CC               ?= cc\n\n"                                                                                       \
-    "VERSION          := %2$s\n"                                                                                       \
-    "NAME             := %1$s\n\n"                                                                                     \
-    "INCDIR           := /usr/local/include\n"                                                                         \
-    "LIBDIR           := /usr/local/lib\n\n"                                                                           \
-    "UNAME_S := $(shell uname -s)\n\n"                                                                                 \
-    "ifeq ($(UNAME_S),Linux)\n"                                                                                        \
-    "$(NAME).$(VERSION).so:\n"                                                                                         \
-    "\t$(CC)  -c $(CFLAGS) -shared -o $(NAME).so %1$s.c  $(LDFLAGS)\n"                                                 \
-    "endif\n"                                                                                                          \
-    "ifeq ($(UNAME_S),Darwin)\n"                                                                                       \
-    "$(NAME).$(VERSION).dylib:\n"                                                                                      \
-    "\t$(CC) -c $(CFLAGS) -dynamiclib -o $(NAME).dylib %1$s.c  $(LDFLAGS)\n"                                           \
-    "endif\n\n"                                                                                                        \
-    "override LDFLAGS +=\n"                                                                                            \
-    "override CFLAGS  += -Dgit_sha=$(shell git rev-parse HEAD) -O3\n\n"                                                \
-    ".PHONY: clean\n"                                                                                                  \
-    "clean:\n"                                                                                                         \
+#define MAKEFILE_LIB_TEMPLATE                                                \
+    "CC      ?= cc\n\n"                                                      \
+    "VERSION := %2$s\n"                                                      \
+    "NAME    := %1$s\n\n"                                                    \
+    "INCDIR  := /usr/local/include\n"                                        \
+    "LIBDIR  := /usr/local/lib\n\n"                                          \
+    "UNAME_S := $(shell uname -s)\n\n"                                       \
+    "ifeq ($(UNAME_S),Linux)\n"                                              \
+    "$(NAME).$(VERSION).so:\n"                                               \
+    "\t$(CC)  -c $(CFLAGS) -shared -o $(NAME).so %1$s.c  $(LDFLAGS)\n"       \
+    "endif\n"                                                                \
+    "ifeq ($(UNAME_S),Darwin)\n"                                             \
+    "$(NAME).$(VERSION).dylib:\n"                                            \
+    "\t$(CC) -c $(CFLAGS) -dynamiclib -o $(NAME).dylib %1$s.c  $(LDFLAGS)\n" \
+    "endif\n\n"                                                              \
+    "override LDFLAGS +=\n"                                                  \
+    "override CFLAGS  += -Dgit_sha=$(shell git rev-parse HEAD) -O3\n\n"      \
+    ".PHONY: clean\n"                                                        \
+    "clean:\n"                                                               \
     "\trm -f $(BINDIR)/*\n\n"
 
 /**
- * makefile_bin_render perform the rendering for a Makefile used
- * with a Flotsam application.
+ * makefile_bin_render perform the rendering for a Makefile used with 
+ * Flotsam application.
  */
 void
-makefile_bin_render(FILE* fd, const char* name, const char* version)
+makefile_bin_render(FILE *fd, const char *name, const char *version)
 {
     fprintf(fd, MAKEFILE_BIN_TEMPLATE, name, version);
 }
 
 /**
- * makefile_lib_render perform the rendering for a Makefile used
- * with a Flotsam library.
+ * makefile_lib_render perform the rendering for a Makefile used with a Flotsam
+ * library.
  */
 void
-makefile_lib_render(FILE* fd, const char* name, const char* version)
+makefile_lib_render(FILE *fd, const char *name, const char *version)
 {
     fprintf(fd, MAKEFILE_LIB_TEMPLATE, name, version);
 }

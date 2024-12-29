@@ -1,7 +1,7 @@
 /*-
  * SPDX-License-Identifier: BSD-2-Clause
  *
- * Copyright (c) 2019 Brian J. Downs, John K. Moore
+ * Copyright (c) 2025 Brian J. Downs, John K. Moore
  *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions
@@ -30,17 +30,17 @@
 
 #include <stdio.h>
 
-#define README_TEMPLATE                                                                                                \
-    "# %1$s\n\n"                                                                                                       \
-    "%1$s %2$s is a binary...\n\n"                                                                                     \
-    "## Build\n\n"                                                                                                     \
-    "## Test\n\n"                                                                                                      \
+#define README_TEMPLATE            \
+    "# %1$s\n\n"                   \
+    "%1$s %2$s is a binary...\n\n" \
+    "## Build\n\n"                 \
+    "## Test\n\n"                  \
     "## Contact\n\n"
 
 void
-readme_render(FILE* fd, const char* name, const char* version)
+readme_render(FILE *fd, const char *name, const char *version)
 {
     fprintf(fd, README_TEMPLATE, name, version);
 }
 
-#endif /* _README_H */
+#endif /* end _README_H */
